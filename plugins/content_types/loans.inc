@@ -75,8 +75,10 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
     if ($entity == FALSE) {
       $ding_entity_id = explode(":", $item->ding_entity_id);
       $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
-      $details = $result[$ding_entity_id[1]];
-      $title = array('#markup' => '<h2>' . $details['title'] . '</h2>');
+        $details = $result[$ding_entity_id[1]];
+        if (isset($details['title'])) {
+          $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
+        }
     }
     else {
       $title = array('#markup' => $item->display_name);
