@@ -71,14 +71,25 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
   foreach ($items as $id => $item) {
     $item->creator = 'fake';
     $entity = $item->entity;
+   //Check if remote loan then get title.
+    if ($entity == FALSE) {
+      $ding_entity_id = explode(":", $item->ding_entity_id);
+      $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
+      $details = $result[$ding_entity_id[1]];
+      $title = array('#markup' => '<h2>' . $details['title'] . '</h2>');
+    }
+    else {
+      $title = array('#markup' => $item->display_name);
+    }
+    
     $options[$item->id] = array(
       '#disabled' => $item->renewable,
       'title' => array(
         'data' => array(
-          $entity ? ting_object_view($entity, 'user_list') : array('#markup' => $item->display_name),
+          $entity ? ting_object_view($entity, 'user_list') : $title,
         ),
         'class' => 'title',
-      ),
+        ),
       'loan_date' => array(
           'data' => format_date(strtotime(check_plain($item->loan_date)), 'date_only'),
           'class' => 'created-date',
