@@ -128,6 +128,14 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
           '#suffix' => '</div>',
       );
     }
+      elseif (!$item->renewable) {
+      $options[$item->id]['title']['data'][] = array(
+        '#type' => 'markup',
+        '#prefix' => '<p class="not-renewable">',
+        '#markup' => t('Not renewable'),
+        '#suffix' => '</p>',
+      );
+    }
   }
 
   $form['loans'] = array(
@@ -156,7 +164,7 @@ function _ding_loan_loans_disable($element) {
   foreach ($element['#options'] as $key => $choice) {
     if (isset($choice['#disabled']) && !$choice['#disabled']) {
       $element[$key]['#disabled'] = TRUE;
-      $element[$key]['#attributes']['title'] = t('Not renewable');
+      $element[$key]['#attributes']['title'] = t('Not renewable');      
     }
   }
   return $element;
