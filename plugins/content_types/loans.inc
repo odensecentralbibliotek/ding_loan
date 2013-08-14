@@ -52,6 +52,7 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
   $destination = drupal_get_destination();
   $header = array(
     'title' => t('Title'),
+    'notes' => t('periodical'),
     'loan_date' => t('Loan date'),
     'expiry' => t('Return date'),
     'operations' => '',
@@ -71,19 +72,26 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
   foreach ($items as $id => $item) {
     $item->creator = 'fake';
     $entity = $item->entity;
-   //Check if remote loan then get title.
-    if ($entity == FALSE) {
-      $ding_entity_id = explode(":", $item->ding_entity_id);
-      $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
-        $details = $result[$ding_entity_id[1]];
-        if (isset($details['title'])) {
+      $res = NULL;
+     //Check if remote loan then get title.
+        if ($entity == FALSE) {
+          $ding_entity_id = explode(":", $item->ding_entity_id);
+          $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
+          $details = $result[$ding_entity_id[1]];      
+          if (isset($details['title'])) {
           $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
+          }
         }
-    }
-    else {
-      $title = array('#markup' => $item->display_name);
-    }
-    
+         elseif ($item->entity->type == 'Tidsskrift') {
+          global $user;
+          $notes = ding_provider_invoke('loan', 'get_loans', $user);
+          debug($notes);
+          $res   = $notes[$item->id];
+          $title = array('#markup' => $item->display_name);
+        }
+        else {
+          $title = array('#markup' => $item->display_name);
+        }    
     $options[$item->id] = array(
       '#disabled' => $item->renewable,
       'title' => array(
@@ -91,6 +99,10 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
           $entity ? ting_object_view($entity, 'user_list') : $title,
         ),
         'class' => 'title',
+        ),
+       'notes' => array(
+          'data' => $res['notes'] ? check_plain($res['notes']) : '',
+          'class' => 'notes',
         ),
       'loan_date' => array(
           'data' => format_date(strtotime(check_plain($item->loan_date)), 'date_only'),
