@@ -85,7 +85,6 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
          elseif ($item->entity->type == 'Tidsskrift') {
           global $user;
           $notes = ding_provider_invoke('loan', 'get_loans', $user);
-          debug($notes);
           $res   = $notes[$item->id];
           $title = array('#markup' => $item->display_name);
         }
