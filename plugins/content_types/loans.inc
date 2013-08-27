@@ -48,6 +48,8 @@ function ding_loan_loans_content_type_edit_form($form, &$form_state) {
  * Implements a drupal form, which show a list of reservations
  */
 function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
+  //Added datepicker to be used for overdue calculation 
+  drupal_add_library('system','ui.datepicker');
   $options = array();
   $destination = drupal_get_destination();
   $header = array(
