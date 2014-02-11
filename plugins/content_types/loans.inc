@@ -81,7 +81,7 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
           $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
           $details = $result[$ding_entity_id[1]];      
           if (isset($details['title'])) {
-          $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
+          $title = array('#markup' =>$details['title']);
           }
         }
          elseif ($item->entity->type == 'Tidsskrift') {
@@ -199,6 +199,10 @@ function ding_loan_loans_form_submit($form, &$form_state) {
   foreach ($result as $id => $status) {
     if ($object = $form_state['values']['items'][$id]->entity) {
       $title = $object->title;
+    }
+    elseif ($object == false){
+    $title = $form['loans']['#options'][$id]['title']['data'][0]['#markup'];
+
     }
     else {
       $title = $item->display_name;
