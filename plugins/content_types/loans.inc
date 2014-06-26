@@ -75,7 +75,15 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
     $item->creator = 'fake';
     $entity = $item->entity;
       $res = NULL;
-     //Check if remote loan then get title.
+      $ting_title = $entity->title;
+      
+      if (isset($ting_title) && $ting_title == FALSE) {
+      db_delete('ting_object')
+          ->condition('tid', $entity->tid)
+          ->execute();
+      $entity = array();
+    }
+    //Check if remote loan then get title.
         if ($entity == FALSE) {
           $ding_entity_id = explode(":", $item->ding_entity_id);
           $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
