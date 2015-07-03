@@ -53,11 +53,11 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
   $options = array();
   $destination = drupal_get_destination();
   $header = array(
-    'title' => t('Title'),
-      'notes' => t('periodical'),
+    'title' => array('data' => t('Title')),
+    'notes' => t('periodical'),
     'loan_date' => t('Loan date'),
     'expiry' => t('Return date'),
-    'operations' => '',
+    'operations' => array('data' => '', 'class' => '{sorter: false}'),
   );
   uasort($items, 'ding_loan_sort_expiry');
 
@@ -168,7 +168,10 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
     '#empty' => t('No loans'),
     '#process' => array('ding_base_element_process_tableselect_form', '_ding_loan_loans_disable'),
   );
+
+  drupal_add_css(drupal_get_path('theme', 'latto_odense') .'/css/oc_tablesort.css');
   $form['loans']['#attributes']['class'] = array('tablesorter');
+  
   
   $form['actions']['submit'] = array(
     '#type' => 'submit',
