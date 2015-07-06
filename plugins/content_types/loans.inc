@@ -158,9 +158,7 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
       );
     }
   }
-    $form['help_text'] = array(
-      '#markup' => '<p>'.t('Hold Shift to select multiple sort criteria.').'</p>'
-    );
+    
   $form['loans'] = array(
     '#type' => 'tableselect_form',
     '#header' => $header,
