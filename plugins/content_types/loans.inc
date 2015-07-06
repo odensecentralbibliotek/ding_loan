@@ -170,7 +170,7 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
   );
 
   drupal_add_css(drupal_get_path('theme', 'latto_odense') .'/css/oc_tablesort.css');
-  $form['loans']['#attributes']['class'] = array('tablesorter');
+  $form['loans']['#attributes']['class'] = array('tablesorter','{sortlist: [[4,0]]}');
   
   
   $form['actions']['submit'] = array(
