@@ -55,8 +55,8 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
   $header = array(
     'title' => array('data' => t('Title')),
     'notes' => t('periodical'),
-    'loan_date' => t('Loan date'),
-    'expiry' => t('Return date'),
+    'loan_date' => array('data' => t('Loan date'),'class' => '{sorter: "ting_date_sort"}'),
+    'expiry' => array('data' => t('Return date'),'class' => '{sorter: "ting_date_sort"}'),
     'operations' => array('data' => '', 'class' => '{sorter: false}'),
   );
   uasort($items, 'ding_loan_sort_expiry');
