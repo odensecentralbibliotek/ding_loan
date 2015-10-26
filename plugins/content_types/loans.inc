@@ -227,6 +227,9 @@ function ding_loan_loans_form_submit($form, &$form_state) {
       case DingProviderLoan::STATUS_NOT_RENEWED:
         drupal_set_message(t('"@title not renewed"', array('@title' => $title)), 'warning');
         break;
+      case DingProviderLoan::STATUS_INT_LOAN:
+          drupal_set_message(t('"@title renewed , but remote library can recall the material before time."', array('@title' => $title)));
+        break;
       default:
         watchdog('ding_loan', 'Unknown renewal status code @code.', array('@code' => $status), WATCHDOG_ERROR);
     }
