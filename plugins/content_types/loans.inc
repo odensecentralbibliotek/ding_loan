@@ -75,7 +75,7 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
     $item->creator = 'fake';
     $entity = $item->entity;
       $res = NULL;
-      $ting_title = $entity->title;
+      $ting_title = $entity != false ? $entity->title : null;
       
       if (isset($ting_title) && $ting_title == FALSE) {
       db_delete('ting_object')
