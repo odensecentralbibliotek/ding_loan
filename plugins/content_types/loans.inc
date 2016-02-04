@@ -166,10 +166,17 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
     '#empty' => t('No loans'),
     '#process' => array('ding_base_element_process_tableselect_form', '_ding_loan_loans_disable'),
   );
-
+  /*
+   * Add css
+   */
   drupal_add_css(drupal_get_path('theme', 'latto_odense') .'/css/oc_tablesort.css');
   $form['loans']['#attributes']['class'] = array('tablesorter','{sortlist: [[4,0]]}');
-  
+  /*
+   * Add JS
+   */
+   $form['#attached']['js'] = array(
+    drupal_get_path('module', 'ding_loan') . '/js/ding_loan.js',
+  );
   
   $form['actions']['submit'] = array(
     '#type' => 'submit',
