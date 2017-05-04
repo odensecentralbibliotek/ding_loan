@@ -153,7 +153,7 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
       $options[$item->id]['title']['data'][] = array(
         '#type' => 'markup',
         '#prefix' => '<p class="not-renewable">',
-        '#markup' => t('Not renewable'),
+        '#markup' => ding_loan_not_renewable_error_string($item->renewalStatusList),
         '#suffix' => '</p>',
       );
     }
@@ -250,4 +250,29 @@ function ding_loan_loans_form_renew_submit($form, &$form_state) {
   form_set_value($form['loans'], array($form_state['triggering_element']['#loan_id']), $form_state);
   ding_loan_loans_form_submit($form, $form_state);
 }
-
+/*
+ * create proper reason why renewable is not possible
+ */
+function ding_loan_not_renewable_error_string(array $statues)
+{
+    $moste_relevant = $statues[sizeof($statues)-1];
+    $output = "Kan ikke fornyes - ";
+    switch ($moste_relevant) {
+        case "deniedReserved":
+            $output .= t('materialet er reserveret ');
+            break;
+        case "deniedMaxRenewalsReached":
+            $output .= t('materialet har været max antal perioder');
+            break;
+        case "deniedLoanerIsBlocked":
+            $output .= t('bruger blokeret - kontakt biblioteket');
+            break;
+        case "deniedOtherReason":
+            $output .= t('du kan kun fornye dine lån 7 dage før afleverings dato');
+            break;
+        default:
+            $output .= t('Not renewable');
+            break;
+    }
+    return $output;
+}
