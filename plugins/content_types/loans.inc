@@ -260,16 +260,16 @@ function ding_loan_not_renewable_error_string(array $statues)
     $output = "Kan ikke fornyes - ";
     switch ($moste_relevant) {
         case "deniedReserved":
-            $output .= t('materialet er reserveret ');
+            $output .= t('materialet er reserveret');
             break;
         case "deniedMaxRenewalsReached":
-            $output .= t('materialet har været max antal perioder');
+            $output .= t('materialet har været fornyet max antal perioder');
             break;
         case "deniedLoanerIsBlocked":
             $output .= t('bruger blokeret - kontakt biblioteket');
             break;
         case "deniedOtherReason":
-            $output .= t('du kan kun fornye dine lån 7 dage før afleverings dato');
+            $output .= t('du kan tidligst fornye dine lån 7 dage før afleverings dato');
             break;
         default:
             $output .= t('Not renewable');
