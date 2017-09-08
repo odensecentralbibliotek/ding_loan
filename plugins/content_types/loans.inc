@@ -278,7 +278,7 @@ function ding_loan_not_renewable_error_string(array $statues)
             $output .= t('bruger blokeret - kontakt biblioteket');
             break;
         case "deniedOtherReason":
-            $output = t('du kan tidligst fornye dine lån 7 dage før afleveringsdatoen');
+            $output = t('du kan tidligst fornye dine lån (igen) 7 dage før afleveringsdatoen');
             break;
         default:
             $output .= t('Not renewable');
