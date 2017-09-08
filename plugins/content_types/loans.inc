@@ -218,9 +218,9 @@ function ding_loan_loans_form_submit($form, &$form_state) {
         }
     }
     $error_messages = array(
-        DingProviderLoan::STATUS_NOT_RENEWED => t('Unable to renew material'),
-        DingProviderLoan::STATUS_RENEWAL_NUM_EXCEEDED => t('Maximum number of renewals reached'),
-        DingProviderLoan::STATUS_RENEWAL_RESERVED => t('The material is reserved by another loaner'),
+        DingProviderLoan::STATUS_NOT_RENEWED => t('Unable to renew material<br/>'),
+        DingProviderLoan::STATUS_RENEWAL_NUM_EXCEEDED => t('Maximum number of renewals reached<br/>'),
+        DingProviderLoan::STATUS_RENEWAL_RESERVED => t('The material is reserved by another loaner<br/>'),
     );
     $result = ding_provider_invoke('loan', 'renew', $form_state['values']['account'], $ids);
     foreach ($result as $id => $status) {
@@ -234,15 +234,15 @@ function ding_loan_loans_form_submit($form, &$form_state) {
         // @todo Better feedback.
         switch ($status) {
             case DingProviderLoan::STATUS_RENEWED:
-                drupal_set_message(t('"@title renewed"', array('@title' => $title)));
+                drupal_set_message(t('@title renewed<br/>', array('@title' => $title)));
                 break;
             case DingProviderLoan::STATUS_RENEWAL_REQUESTED:
-                drupal_set_message(t('"@title er et fjernlån og fornyes med forbehold. Du modtager en besked, hvis det ikke kan fornyes hos långivende bibliotek"', array('@title' => $title), 'warning'));
+                drupal_set_message(t('@title er et fjernlån og fornyes med forbehold. Du modtager en besked, hvis det ikke kan fornyes hos långivende bibliotek<br/>', array('@title' => $title), 'warning'));
                 break;
             case DingProviderLoan::STATUS_NOT_RENEWED:
             case DingProviderLoan::STATUS_RENEWAL_NUM_EXCEEDED:
             case DingProviderLoan::STATUS_RENEWAL_RESERVED:
-                drupal_set_message(t('"@title: @message"', array(
+                drupal_set_message(t('@title: @message', array(
                     '@title' => $title,
                     '@message' => $error_messages[$status],
                         )), 'error');
