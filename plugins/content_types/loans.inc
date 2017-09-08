@@ -211,40 +211,47 @@ function _ding_loan_loans_disable($element) {
 function ding_loan_loans_form_submit($form, &$form_state) {
   $ids = array();
   foreach (array_filter($form_state['values']['loans']) as $id) {
-    // The loans array has _form_options array, henc the is_string check. ??
-    //removed !is_string($id)
-    if ($form_state['values']['items'][$id]->renewable) {
-      $ids[] = $id;
+        // The loans array has _form_options array, henc the is_string check. ??
+        //removed !is_string($id)
+        if (!is_array($id) && $form_state['values']['items'][$id]->renewable) {
+            $ids[] = $id;
+        }
     }
-  }
-
-  $result = ding_provider_invoke('loan', 'renew', $form_state['values']['account'], $ids);
-  foreach ($result as $id => $status) {
-    if ($object = $form_state['values']['items'][$id]->entity) {
-      $title = $object->title;
+    $error_messages = array(
+        DingProviderLoan::STATUS_NOT_RENEWED => t('Unable to renew material'),
+        DingProviderLoan::STATUS_RENEWAL_NUM_EXCEEDED => t('Maximum number of renewals reached'),
+        DingProviderLoan::STATUS_RENEWAL_RESERVED => t('The material is reserved by another loaner'),
+    );
+    $result = ding_provider_invoke('loan', 'renew', $form_state['values']['account'], $ids);
+    foreach ($result as $id => $status) {
+        if ($object = $form_state['values']['items'][$id]->entity) {
+            $title = $object->title;
+        } elseif ($object == false) {
+            $title = $form['loans']['#options'][$id]['title']['data'][0]['#markup'];
+        } else {
+            $title = $item->display_name;
+        }
+        // @todo Better feedback.
+        switch ($status) {
+            case DingProviderLoan::STATUS_RENEWED:
+                drupal_set_message(t('"@title renewed"', array('@title' => $title)));
+                
+                break;
+            case DingProviderLoan::STATUS_RENEWAL_REQUESTED:
+                drupal_set_message(t('"@title er et fjernlån og fornyes med forbehold. Du modtager en besked, hvis det ikke kan fornyes hos långivende bibliotek"', array('@title' => $title), 'warning'));
+                break;
+            case DingProviderLoan::STATUS_NOT_RENEWED:
+            case DingProviderLoan::STATUS_RENEWAL_NUM_EXCEEDED:
+            case DingProviderLoan::STATUS_RENEWAL_RESERVED:
+                drupal_set_message(t('"@title: @message"', array(
+                    '@title' => $title,
+                    '@message' => $error_messages[$status],
+                        )), 'error');
+                break;
+            default:
+                watchdog('ding_loan', 'Unknown renewal status code @code.', array('@code' => $status), WATCHDOG_ERROR);
+        }
     }
-    elseif ($object == false){
-    $title = $form['loans']['#options'][$id]['title']['data'][0]['#markup'];
-
-    }
-    else {
-      $title = $item->display_name;
-    }
-    // @todo Better feedback.
-    switch ($status) {
-      case DingProviderLoan::STATUS_RENEWED:
-        drupal_set_message(t('"@title renewed"', array('@title' => $title)));
-        break;
-      case DingProviderLoan::STATUS_NOT_RENEWED:
-        drupal_set_message(t('"@title not renewed"', array('@title' => $title)), 'warning');
-        break;
-      case DingProviderLoan::STATUS_INT_LOAN:
-          drupal_set_message(t('"@title renewed , but remote library can recall the material before time."', array('@title' => $title)));
-        break;
-      default:
-        watchdog('ding_loan', 'Unknown renewal status code @code.', array('@code' => $status), WATCHDOG_ERROR);
-    }
-  }
 }
 
 /**
