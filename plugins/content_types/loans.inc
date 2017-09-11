@@ -234,7 +234,7 @@ function ding_loan_loans_form_submit($form, &$form_state) {
         // @todo Better feedback.
         switch ($status) {
             case DingProviderLoan::STATUS_RENEWED:
-                drupal_set_message(t('@title renewed', array('@title' => $title). '<br/>'));
+                drupal_set_message(t('@title renewed', array('@title' => $title)). '<br/>');
                 break;
             case DingProviderLoan::STATUS_RENEWAL_REQUESTED:
                 drupal_set_message(t('@title er et fjernlån og fornyes med forbehold. Du modtager en besked, hvis det ikke kan fornyes hos långivende bibliotek', array('@title' => $title)). '<br/>', 'warning');
