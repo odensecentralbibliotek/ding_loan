@@ -272,7 +272,7 @@ function ding_loan_not_renewable_error_string(array $statues)
             $output .= t('materialet er reserveret');
             break;
         case "deniedMaxRenewalsReached":
-            $output .= t('materialet har været fornyet max antal perioder');
+            $output = t('materialet har været fornyet max antal perioder');
             break;
         case "deniedLoanerIsBlocked":
             $output .= t('bruger blokeret - kontakt biblioteket');
