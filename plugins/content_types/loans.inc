@@ -108,7 +108,7 @@ function ding_loan_loans_form($form, &$form_state, $account, $items = array()) {
       '#disabled' => $item->renewable,
       'title' => array(
         'data' => array(
-          $entity->title ? ting_object_view($entity, 'user_list') : $title,
+          is_object($entity) && $entity->title ? ting_object_view($entity, 'user_list') : $title,
         ),
         'class' => 'title',
         ),
